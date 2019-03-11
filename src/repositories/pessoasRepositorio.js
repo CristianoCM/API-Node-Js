@@ -3,43 +3,47 @@
 const mongoose = require('mongoose');
 const Pessoas = mongoose.model('Pessoas');
 
-exports.get = () => {
-    return Pessoas.find({
+exports.get = async() => {
+    const res = await Pessoas.find({
         ativo: true
     }, 'nome sobrenome cargo descricao');
+    return res;
 }
 
-exports.getByCargo = (cargo) => {
-    return Pessoas.findOne({
+exports.getByCargo = async(cargo) => {
+    const res = await Pessoas.findOne({
         cargo: cargo,
         ativo: true
     }, 'nome sobrenome cargo descricao');
+    return res;
 }
 
-exports.getById = (idP) => {
-    return Pessoas.findById(idP, 
+exports.getById = async(idP) => {
+    const res = await Pessoas.findById(idP, 
         'nome sobrenome cargo descricao');
+    return res;
 }
 
-exports.getBySobrenome = (sob) => {
-    return Pessoas.find({
+exports.getBySobrenome = async(sob) => {
+    const res = await Pessoas.find({
         sobrenome: sob,
         ativo: true
     }, 'nome sobrenome cargo descricao');
+    return res;
 }
 
-exports.create = (data) => {
+exports.create = async(data) => {
     var pessoa = new Pessoas(data);
-    return pessoa.save();
+    await pessoa.save();
 }
 
-exports.update = (id, modifications) => {
-    return Pessoas.findByIdAndUpdate(id, 
+exports.update = async(id, modifications) => {
+    await Pessoas.findByIdAndUpdate(id, 
         { $set: modifications },
         { new: true }
     );
 }
 
-exports.delete = (id) => {
-    return Pessoas.findByIdAndDelete(id);
+exports.delete = async(id) => {
+    await Pessoas.findByIdAndDelete(id);
 }

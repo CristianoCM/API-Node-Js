@@ -5,50 +5,58 @@ const ValidationMaster = require('../validators/validatorMaster');
 const ErrorMessage = require('../validators/errorMessages');
 const repository = require('../repositories/pessoasRepositorio');
 
-exports.get = (req, res, next) => {
-    repository.get()
-    .then(pess => {
-        res.status(200).send(pess);
-    })
-    .catch(e => {
-        res.status(400).send(e);
-    });
+exports.get = async(req, res, next) => {
+    try {
+        var data = await repository.get();
+        res.status(200).send(data);
+    } 
+    catch (e) {
+        res.status(500).send({
+            message: 'Falha ao processar requisição.'
+        });
+    }
 }
 
-exports.getByCargo = (req, res, next) => {
+exports.getByCargo = async(req, res, next) => {
     const cargo = req.params.cargo;
-    repository.getByCargo(cargo)
-    .then(pess => {
-        res.status(200).send(pess);
-    })
-    .catch(e => {
-        res.status(400).send(e);
-    });
+
+    try {
+        var data = await repository.getByCargo(cargo);
+        res.status(200).send(data);
+    } catch (e) {
+        res.status(500).send({
+            message: 'Falha ao processar requisição.'
+        });
+    }
 }
 
-exports.getById = (req, res, next) => {
+exports.getById = async(req, res, next) => {
     const idP = req.params.id;
-    repository.getById(idP)
-    .then(pess => {
-        res.status(200).send(pess);
-    })
-    .catch(e => {
-        res.status(400).send(e);
-    });
+
+    try {
+        var data = await repository.getById(idP);
+        res.status(200).send(data);
+    } catch (e) {
+        res.status(500).send({
+            message: 'Falha ao processar requisição.'
+        });
+    }
 }
 
-exports.getBySobrenome = (req, res, next) => {
+exports.getBySobrenome = async(req, res, next) => {
     const sob = req.params.sobrenome;
-    repository.getBySobrenome(sob)
-    .then(pess => {
-        res.status(200).send(pess);
-    })
-    .catch(e => {
-        res.status(400).send(e);
-    });
+
+    try {
+        var data = await repository.getBySobrenome(sob);
+        res.status(200).send(data);
+    } catch (e) {
+        res.status(500).send({
+            message: 'Falha ao processar requisição.'
+        });
+    }
 }
 
-exports.post = (req, res, next) => {
+exports.post = async(req, res, next) => {
     let validador = new ValidationMaster();
     let errMes = new ErrorMessage();
     
@@ -62,21 +70,19 @@ exports.post = (req, res, next) => {
         return;
     }
 
-    repository.create(req.body)
-    .then(x => {
-        res.status(201).send({ 
-            message: 'Pessoa cadastrada com sucesso!'   
-         });
-    })
-    .catch(e => {
-        res.status(400).send({ 
-            message: 'Falha ao cadastrar Pessoa',
-            data: e
-         });
-    });
+    try {
+        await repository.create(req.body);
+        res.status(201).send({
+            message: 'Pessoa cadastrada com sucesso!'
+        });
+    } catch (e) {
+        res.status(500).send({
+            message: 'Falha ao processar requisição.'
+        });
+    }
 }
 
-exports.put = (req, res, next) => {
+exports.put = async(req, res, next) => {
     var modifications = {};
 
     const id = req.params.id;
@@ -98,31 +104,29 @@ exports.put = (req, res, next) => {
     if (cargo)
         modifications.cargo = cargo;
 
-    repository.update(id, modifications)
-    .then(x => {
+    try {
+        await repository.update(id, modifications);
         res.status(200).send({
             message: 'Pessoa atualizada com sucesso!'
         });
-    }).catch(e => {
-        res.status(400).send({
-            message: 'Falha ao atualizar Pessoa.',
-            data: e
+    } catch (e) {
+        res.status(500).send({
+            message: 'Falha ao processar requisição.'
         });
-    });
+    }
 }
 
-exports.delete = (req, res, next) => {
+exports.delete = async(req, res, next) => {
     const id = req.body.id;
 
-    repository.delete(id)
-    .then(x => {
+    try {
+        await repository.delete(id);
         res.status(200).send({
             message: 'Pessoa deletada com sucesso!'
         });
-    }).catch(e => {
-        res.status(400).send({
-            message: 'Falha ao deletar Pessoa.',
-            data: e
+    } catch (e) {
+        res.status(500).send({
+            message: 'Falha ao processar requisição.'
         });
-    });
+    }
 }

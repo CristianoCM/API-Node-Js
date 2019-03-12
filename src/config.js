@@ -1,8 +1,8 @@
-global.SALT_KEY = 'b867bc1e-1e16-4c41-9433-ad33b2646c43';
+global.SALT_KEY = process.env.SALT_KEY;
 global.EMAIL_TMPL = `Olá, <strong>{0}</strong>. Seja bem-vindo a API teste do Cristiano.`;
 
 module.exports = {
-    connectionString: 'mongodb+srv://cris:AxtksCkmoGlKJHur@primeironode-xizxt.azure.mongodb.net/test?retryWrites=true',
-    emailAddress: 'envioemail@blanko.be',
-    emailPasswd: 'blanko@123'
+    connectionString: 'mongodb+srv://' + process.env.DB_USER + ':' + process.env.DB_PASS + '@primeironode-xizxt.azure.mongodb.net/test?retryWrites=true',
+    emailAddress: process.env.EMAIL_MASTER,
+    emailPasswd: process.env.PWD_EMAIL
 }

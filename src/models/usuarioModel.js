@@ -21,6 +21,11 @@ const schema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'TipoUsuario'
     },
+    image: {
+        type: String,
+        required: true,
+        trim: true
+    },
     dataCadastro: {
         type: Date,
         required: true,

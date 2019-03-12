@@ -2,12 +2,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const config = require('./config');
 
 // Instanciando express
 const app = express();
 
 // Conexão com o Database
-mongoose.connect('mongodb+srv://cris:AxtksCkmoGlKJHur@primeironode-xizxt.azure.mongodb.net/test?retryWrites=true',{ useNewUrlParser: true });
+mongoose.connect(config.connectionString, { useNewUrlParser: true });
 
 // Carregando Models
 const Pessoas = require('./models/pessoasModel');

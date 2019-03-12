@@ -4,13 +4,15 @@ const mongoose = require('mongoose');
 const Usuario = mongoose.model('Usuario');
 
 exports.get = async() => {
-    const res = await Usuario.find({}, 'email nome tipo');
+    const res = await Usuario
+        .find({}, 'email nome tipo image')
+        .populate('tipo', "tipo");
     return res;
 }
 
 exports.getById = async(id) => {
     const res = await Usuario.findById(id, 
-        'email nome tipo');
+        'email nome tipo image');
     return res;
 }
 

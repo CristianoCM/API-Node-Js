@@ -72,11 +72,11 @@ exports.post = async(req, res, next) => {
             image: req.body.image
         });
 
-        //emailservice.send(
-        //    req.body.email, 
-        //    'Bem-vindo a API teste do Cristiano!', 
-        //    global.EMAIL_TMPL.replace('{0}', req.body.nome)
-        //);
+        emailservice.send(
+            req.body.email, 
+            'Bem-vindo a API teste do Cristiano!', 
+            global.EMAIL_TMPL.replace('{0}', req.body.nome)
+        );
 
         res.status(201).send({
             message: 'Usuário cadastrado com sucesso!'

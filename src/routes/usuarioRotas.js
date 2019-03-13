@@ -34,7 +34,7 @@ const upload = multer({
 router.get('/', controller.get);
 router.get('/admin/:id', controller.getById);
 router.post('/', upload.single('image'), controller.post);
-router.put('/:id', controller.put);
+router.put('/:id', upload.single('image'), controller.put);
 router.delete('/', controller.delete);
 
 module.exports = router;

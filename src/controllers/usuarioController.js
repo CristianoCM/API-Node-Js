@@ -97,7 +97,29 @@ exports.put = async(req, res, next) => {
     const password = req.body.password || null;
     const nome = req.body.nome || null;
     const tipo = req.body.tipo || null;
-    const image = req.body.image || null;
+    const image = req.file;
+    var imageRes = null;
+
+    if (image) {
+        var imageSp = image.path.split("\\") || "";
+
+        if (imageSp != "") {
+            var sepImgSiz = imageSp.length;
+            imageRes = imageSp[sepImgSiz - 1];
+
+            // Deletar imagem anterior
+            var usuAnt = await repository.getById(id);
+
+            var imgAnt = usuAnt.image;
+            var pathSpl = req.file.path.split("\\");
+            var pathSli = pathSpl.slice(0, pathSpl.length - 1);
+            var pathRoot = pathSli.join().replace(",", "\\").concat("\\");
+            var pathImgAnt = pathRoot + imgAnt;
+
+            const fs = require('fs');
+            fs.unlink(pathImgAnt);
+        }
+    }
 
     if (email)
         modifications.email = email;
@@ -107,8 +129,8 @@ exports.put = async(req, res, next) => {
         modifications.nome = nome;
     if (tipo)
         modifications.tipo = tipo;
-    if (image)
-        modifications.image = image;
+    if (imageRes)
+        modifications.image = imageRes;
 
     try {
         await repository.update(id, modifications);

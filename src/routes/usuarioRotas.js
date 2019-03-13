@@ -32,11 +32,11 @@ const upload = multer({
     fileFilter: fileFilter
 });
 
-router.get('/', auth.authorize, controller.get);
+router.get('/', auth.isAdmin, controller.get);
 router.get('/admin/:id', auth.authorize, controller.getById);
-router.post('/', auth.authorize, upload.single('image'), controller.post);
-router.put('/:id', auth.authorize, upload.single('image'), controller.put);
-router.delete('/', auth.authorize, controller.delete);
+router.post('/', auth.isAdmin, upload.single('image'), controller.post);
+router.put('/:id', auth.isAdmin, upload.single('image'), controller.put);
+router.delete('/', auth.isAdmin, controller.delete);
 router.post('/authenticate', controller.authenticate);
 router.post('/refreshToken', auth.authorize, controller.refreshToken);
 

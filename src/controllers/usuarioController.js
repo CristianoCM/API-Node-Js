@@ -182,7 +182,8 @@ exports.authenticate = async(req, res, next) => {
         const token = await auth.generateToken({ 
             email: login.email, 
             nome: login.nome,
-            id: login._id
+            id: login._id,
+            tipo: login.tipo
         });
 
         res.status(201).send({
@@ -190,7 +191,8 @@ exports.authenticate = async(req, res, next) => {
             data: {
                 email: login.email,
                 nome: login.nome,
-                id: login._id
+                id: login._id,
+                tipo: login.tipo
             }
         });
     } 
@@ -218,7 +220,8 @@ exports.refreshToken = async(req, res, next) => {
         const rToken = await auth.generateToken({
             email: usu.email,
             nome: usu.nome,
-            id: usu._id
+            id: usu._id,
+            tipo: login.tipo
         });
 
         res.status(201).send({
@@ -226,7 +229,8 @@ exports.refreshToken = async(req, res, next) => {
             data: {
                 email: usu.email,
                 nome: usu.nome,
-                id: usu._id
+                id: usu._id,
+                tipo: login.tipo
             }
         });
     } 

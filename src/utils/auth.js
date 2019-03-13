@@ -1,6 +1,7 @@
 'use strict';
 
 const jwt = require('jsonwebtoken');
+const config = require('../config');
 
 exports.generateToken = async (data) => {
     return jwt.sign(data, global.SALT_TOKEN, { expiresIn: '1d' });
@@ -27,6 +28,34 @@ exports.authorize = function (req, res, next) {
             });
         } else {
             next();
+        }
+    });
+}
+
+exports.isAdmin = function (req, res, next) {
+    var token = req.body.token || req.query.token || req.headers['x-access-token'];
+
+    if (!token) {
+        res.status(401).json({
+            message: 'Token inválido.'
+        });
+        return;
+    }
+
+    jwt.verify(token, global.SALT_TOKEN, function (error, decoded) {
+        if (error) {
+            res.status(401).json({
+                message: 'Token inválido.'
+            });
+            return;
+        }
+
+        if (decoded.tipo == config.idTipoAdm) {
+            next();
+        } else {
+            res.status(403).json({
+                message: 'Funcionalidade administrativa.'
+            });
         }
     });
 }

@@ -31,3 +31,12 @@ exports.update = async(id, modifications) => {
 exports.delete = async(id) => {
     await Usuario.findByIdAndDelete(id);
 }
+
+exports.authenticate = async(data) => {
+    const res = await Usuario
+        .findOne({
+            email: data.email,
+            password: data.password
+        });
+    return res;
+}

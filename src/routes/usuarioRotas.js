@@ -3,6 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/usuarioController');
+const auth = require('../utils/auth');
 
 const guid = require('guid');
 const multer = require('multer');
@@ -31,10 +32,11 @@ const upload = multer({
     fileFilter: fileFilter
 });
 
-router.get('/', controller.get);
+router.get('/', auth.authorize, controller.get);
 router.get('/admin/:id', controller.getById);
 router.post('/', upload.single('image'), controller.post);
 router.put('/:id', upload.single('image'), controller.put);
 router.delete('/', controller.delete);
+router.post('/authenticate', controller.authenticate);
 
 module.exports = router;

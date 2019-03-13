@@ -17,6 +17,7 @@
     "fs": "0.0.1-security",
     "guid": "0.0.12",
     "http": "0.0.0",
+    "jsonwebtoken": "^8.5.0",
     "md5": "^2.2.1",
     "mongoose": "^5.4.17",
     "multer": "^1.4.1",

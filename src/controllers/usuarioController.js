@@ -6,6 +6,7 @@ const repository = require('../repositories/usuarioRepositorio');
 const md5 = require('md5');
 const emailservice = require('../utils/email-service');
 const config = require('../config');
+const auth = require('../utils/auth');
 
 exports.get = async(req, res, next) => {
     try {
@@ -57,13 +58,7 @@ exports.post = async(req, res, next) => {
     }
 
     try {
-        // Preparando Img de Base 64
-        //let filename = guid.raw().toString() + ".jpg";
-        //let rawdata = req.body.image;
-        //let matches = rawdata.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
-        //let type = matches[1];
-        //let buffer = new Buffer(matches[2], 'base64');
-
+        
         await repository.create({
             nome: req.body.nome,
             email: req.body.email,
@@ -153,6 +148,40 @@ exports.delete = async(req, res, next) => {
             message: 'Usuário deletado com sucesso!'
         });
     } catch (e) {
+        res.status(500).send({
+            message: 'Falha ao processar requisição.'
+        });
+    }
+}
+
+exports.authenticate = async(req, res, next) => {
+    try {
+        const login = await repository.authenticate({
+            email: req.body.email,
+            password: md5(req.body.password + global.SALT_KEY)
+        });
+
+        if (!login) {
+            res.status(404).send({
+                message: "Usuário e/ou senha inválido(s)"
+            });
+            return;
+        }
+
+        const token = await auth.generateToken({ 
+            email: login.email, 
+            nome: login.nome 
+        });
+
+        res.status(201).send({
+            token,
+            data: {
+                email: login.email,
+                nome: login.nome
+            }
+        });
+    } 
+    catch (e) {
         res.status(500).send({
             message: 'Falha ao processar requisição.'
         });

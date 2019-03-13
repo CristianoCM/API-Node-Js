@@ -1,4 +1,5 @@
 global.SALT_KEY = process.env.SALT_KEY;
+global.SALT_TOKEN = process.env.SALT_TOKEN;
 global.EMAIL_TMPL = `Olá, <strong>{0}</strong>. Seja bem-vindo a API teste do Cristiano.`;
 
 module.exports = {

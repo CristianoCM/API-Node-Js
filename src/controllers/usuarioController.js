@@ -88,6 +88,17 @@ exports.put = async(req, res, next) => {
 
     const id = req.params.id;
 
+    // Verificando se Usuário está trocando suas próprias informações
+    const token = req.body.token || req.query.token || req.headers['x-access-token'];
+    const decoT = await auth.decodeToken(token);
+
+    if (decoT.id != id) {
+        res.status(403).send({
+            message: 'Requisição negada.'
+        });
+        return;
+    }
+
     const email = req.body.email || null;
     const password = req.body.password || null;
     const nome = req.body.nome || null;
@@ -170,14 +181,52 @@ exports.authenticate = async(req, res, next) => {
 
         const token = await auth.generateToken({ 
             email: login.email, 
-            nome: login.nome 
+            nome: login.nome,
+            id: login._id
         });
 
         res.status(201).send({
             token,
             data: {
                 email: login.email,
-                nome: login.nome
+                nome: login.nome,
+                id: login._id
+            }
+        });
+    } 
+    catch (e) {
+        res.status(500).send({
+            message: 'Falha ao processar requisição.'
+        });
+    }
+}
+
+exports.refreshToken = async(req, res, next) => {
+    try {
+        const token = req.body.token || req.query.token || req.headers['x-access-token'];
+        const data = await auth.decodeToken(token);
+
+        const usu = await repository.getById(data.id);
+
+        if (!usu) {
+            res.status(404).send({
+                message: 'Usuário inválido ou inexistente'
+            });
+            return;
+        }
+
+        const rToken = await auth.generateToken({
+            email: usu.email,
+            nome: usu.nome,
+            id: usu._id
+        });
+
+        res.status(201).send({
+            token: token,
+            data: {
+                email: usu.email,
+                nome: usu.nome,
+                id: usu._id
             }
         });
     } 
